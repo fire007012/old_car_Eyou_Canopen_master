@@ -1,5 +1,9 @@
 # Eyou_Canopen_Master
 
+> 现状说明：当前实机机械臂前两轴 `shoulder_yaw_joint`、`shoulder_pitch_joint` 已切到 `can_driver` 的 MT 后端，
+> 标准整机启动请使用 `Eyou_ROS1_Master` / `robot_bringup`。
+> 本包目前仅保留给历史 CANopen 调试链路和遗留场景，不再是机械臂前两轴的默认控制入口。
+
 目录名当前是 `Eyou_Canopen_master/`，但包名与 `roslaunch` / `catkin_make --pkg` 使用的名字仍是 `Eyou_Canopen_Master`。这个包负责 CANopen 主站、`ros_control` 适配、生命周期服务和单后端 bringup。
 
 ## 包结构
@@ -45,7 +49,7 @@ catkin_make --pkg Eyou_Canopen_Master
 source devel/setup.bash
 ```
 
-标准单后端 bringup：
+标准单后端 bringup（遗留 CANopen 链路）：
 
 ```bash
 roslaunch Eyou_Canopen_Master bringup.launch
@@ -57,7 +61,7 @@ roslaunch Eyou_Canopen_Master bringup.launch
 roslaunch Eyou_Canopen_Master bringup_flipper_4axis.launch
 ```
 
-启用 IP executor：
+启用 IP executor（仅遗留 CANopen 场景）：
 
 ```bash
 roslaunch Eyou_Canopen_Master bringup.launch \
@@ -135,6 +139,7 @@ rosrun Eyou_Canopen_Master joint_action_ui.py
 ## 使用边界
 
 - 如果系统已经切到统一外观层，优先使用 `Eyou_ROS1_Master`，不要在上层直接绕过 facade 调底层。
+- 机械臂前两轴当前由 `can_driver` 直接托管；不要再用本包驱动 `shoulder_yaw_joint`、`shoulder_pitch_joint` 实机联调。
 - `joint_action_ui.py` 适合动作 / 轨迹链路验证，不覆盖 `flipper_control` 的 `csv_velocity` 调试路径。
 - `docs/archive/` 里保留大量历史草案与 bug 记录，当前执行基线以顶层 README 与现行文档为准。
 
