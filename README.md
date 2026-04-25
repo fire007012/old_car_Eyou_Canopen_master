@@ -55,11 +55,15 @@ source devel/setup.bash
 roslaunch Eyou_Canopen_Master bringup.launch
 ```
 
+注意：该命令仅用于独立历史 CANopen 调试，不得与 `roslaunch robot_bringup full_system.launch` 或已启动的 `Eyou_ROS1_Master/hybrid_motor_hw.launch` 同时运行。
+
 四摆臂 4 轴 bringup：
 
 ```bash
 roslaunch Eyou_Canopen_Master bringup_flipper_4axis.launch
 ```
+
+注意：该命令同样属于遗留单后端入口；若整车已经走 hybrid/full_system 基线，不要再额外启动这条 4 轴 CANopen 链路。
 
 启用 IP executor（仅遗留 CANopen 场景）：
 
@@ -139,6 +143,7 @@ rosrun Eyou_Canopen_Master joint_action_ui.py
 ## 使用边界
 
 - 如果系统已经切到统一外观层，优先使用 `Eyou_ROS1_Master`，不要在上层直接绕过 facade 调底层。
+- 若已使用 `robot_bringup/full_system.launch` 或 `Eyou_ROS1_Master/hybrid_motor_hw.launch`，不要再并发启动本包任一 bringup/canopen_hw launch，也不要再执行 `/canopen_hw_node/*` 生命周期命令。
 - 机械臂前两轴当前由 `can_driver` 直接托管；不要再用本包驱动 `shoulder_yaw_joint`、`shoulder_pitch_joint` 实机联调。
 - `joint_action_ui.py` 适合动作 / 轨迹链路验证，不覆盖 `flipper_control` 的 `csv_velocity` 调试路径。
 - `docs/archive/` 里保留大量历史草案与 bug 记录，当前执行基线以顶层 README 与现行文档为准。
